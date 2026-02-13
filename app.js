@@ -215,13 +215,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		// navigation controls
 		let nav = document.getElementById('quiz-nav');
 		if(nav) nav.remove();
-		nav = document.createElement('div'); nav.id='quiz-nav'; nav.className='quiz-nav'; nav.style.display='flex'; nav.style.justifyContent='space-between'; nav.style.alignItems='center'; nav.style.marginTop='12px';
+		nav = document.createElement('div'); nav.id='quiz-nav'; nav.className='quiz-nav'; nav.style.display='flex'; nav.style.justifyContent='space-between'; nav.style.alignItems='center'; nav.style.gap='12px'; nav.style.marginTop='12px';
 		const prev = document.createElement('button'); prev.type='button'; prev.className='btn'; prev.textContent='Anterior'; prev.style.opacity='0.8';
 		const next = document.createElement('button'); next.type='button'; next.className='btn btn-cta'; next.textContent='Siguiente';
 		const submitBtn = document.createElement('button'); submitBtn.type='submit'; submitBtn.className='btn btn-accent'; submitBtn.textContent='Enviar respuestas'; submitBtn.style.display='none';
-		nav.appendChild(prev); nav.appendChild(next); nav.appendChild(submitBtn);
-		quizForm.querySelector('.quiz-actions').innerHTML = ''; // clear existing actions
-		quizForm.querySelector('.quiz-actions').appendChild(nav);
+		const progress = document.createElement('div'); progress.className='quiz-progress'; progress.style.fontWeight='700'; progress.style.minWidth='140px'; progress.style.textAlign='center'; progress.textContent = `Pregunta 1/${questions.length}`;
+		nav.appendChild(prev);
+		nav.appendChild(progress);
+		nav.appendChild(next);
+		nav.appendChild(submitBtn);
+
+		// ensure actions container exists
+		let actionsContainer = quizForm.querySelector('.quiz-actions');
+		if(!actionsContainer){ actionsContainer = document.createElement('div'); actionsContainer.className = 'quiz-actions'; quizForm.appendChild(actionsContainer); }
+		actionsContainer.innerHTML = '';
+		actionsContainer.appendChild(nav);
 
 		// state
 		let current = 0;
@@ -233,6 +241,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			// update nav buttons
 			prev.style.visibility = current===0 ? 'hidden' : 'visible';
 			if(current === questionEls.length-1){ next.style.display='none'; submitBtn.style.display='inline-block'; } else { next.style.display='inline-block'; submitBtn.style.display='none'; }
+			// update progress indicator
+			if(progress) progress.textContent = `Pregunta ${current+1}/${questionEls.length}`;
 		}
 
 		prev.addEventListener('click', ()=>{ showQuestion(current-1); });
