@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta! 🏁🚗🏎️' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
 		const accept = document.createElement('button'); accept.className = 'close-btn btn btn-accent'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
-		const repeatBtn = document.createElement('button'); repeatBtn.className = 'btn'; repeatBtn.textContent = 'Repetir quiz';
+		const repeatBtn = document.createElement('button'); repeatBtn.className = 'btn btn-accent close-btn'; repeatBtn.textContent = 'Repetir quiz';
 		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept); modal.appendChild(repeatBtn);
 		overlay.appendChild(modal);
 		document.body.appendChild(overlay);
