@@ -110,6 +110,13 @@
  .quiz-question{background:var(--card);padding:12px;border-radius:6px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02)}
  .quiz-actions{display:flex;gap:10px}
  .quiz-result{margin-top:12px;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px}
+
+/* CTA 'Probar ahora' - keep blue look but hover border becomes red */
+#cta-drive:hover{ border-color: var(--accent-red); box-shadow:0 10px 24px rgba(215,26,42,0.12) }
+
+/* Quiz nav buttons: make them blue by default and use royal-blue on hover */
+#quiz-nav .btn{ border-color: var(--accent-blue) !important; }
+#quiz-nav .btn:hover{ border-color: var(--accent-royal) !important; box-shadow:0 10px 24px rgba(7,58,154,0.10) }
  
  .site-footer{padding:24px 0;border-top:1px solid rgba(255,255,255,0.03);margin-top:28px}
 .footer-links{display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap}
