@@ -271,6 +271,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		});
 	});
 
+	// Populate timeline paragraphs and add captions based on image filenames
+	const timelineInfo = {
+		'bmw M3 E30': '1986-1991 — Origen del M3: compacto, ligero y enfocado a la pista. Motor 4-cilindros que convirtió a BMW M en una referencia.',
+		'bmw M3 E36': '1992-1999 — Expansión comercial: más potencia, mayor confort y una puesta a punto que popularizó la marca entre entusiastas.',
+		'bmw M3 E46': '2000-2006 — Clásico moderno: 333 CV, excelente equilibrio chasis-motor y muchas ediciones especiales apreciadas hoy.',
+		'bmw M3 E92': '2007-2013 — V8 atmosférico: 414 CV en su culmen, mayor par motor y una experiencia sonora única antes de la era turbo.',
+		'bmw M4 F82': '2014 — Debut del M4: S55 biturbo, 431-450 CV y un nuevo enfoque turboalimentado para rendimiento y eficiencia.'
+	};
+
+	document.querySelectorAll('.timeline-item').forEach(item => {
+		const img = item.querySelector('.timeline-img');
+		const para = item.querySelector('p');
+		if(!img) return;
+		const src = img.getAttribute('src') || '';
+		const file = decodeURIComponent(src.split('/').pop() || '').replace(/\.[^/.]+$/, '');
+		const key = file.trim();
+		// If we have curated text for this file, replace paragraph text
+		if(timelineInfo[key]){
+			if(para) para.textContent = timelineInfo[key];
+		}
+		// add a small caption under the image with a friendly name
+		let caption = item.querySelector('.timeline-caption');
+		const friendly = file.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+		if(!caption){
+			caption = document.createElement('p');
+			caption.className = 'timeline-caption';
+			img.insertAdjacentElement('afterend', caption);
+		}
+		caption.textContent = friendly;
+	});
+
 	// small accessibility: close lightbox with Escape
 	document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const overlays = document.querySelectorAll('body > div'); overlays.forEach(o=>{ if(o && o.style && o.style.zIndex==='9999') document.body.removeChild(o); }); }});
 });
