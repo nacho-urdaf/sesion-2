@@ -411,8 +411,48 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		}catch(e){ console.warn('Celebration sound failed', e); return ()=>{}; }
 	}
 
-	quizReset.addEventListener('click', ()=>{ renderQuiz(); quizResult.textContent=''; });
-	renderQuiz();
+	// Separate name entry from quiz: create start button and hide quiz until name entered
+	const nameIntro = document.querySelector('.quiz-intro');
+	const nameInput = document.getElementById('participant-name');
+	let startBtn = document.getElementById('start-quiz-btn');
+	if(!startBtn){
+		startBtn = document.createElement('button'); startBtn.id='start-quiz-btn'; startBtn.type='button'; startBtn.className='btn btn-cta'; startBtn.textContent='Comenzar';
+		nameIntro.appendChild(startBtn);
+	}
+	// Initially hide quiz form until user starts
+	quizForm.style.display = 'none';
+
+	function startQuiz(){
+		const participantName = nameInput.value.trim();
+		if(!participantName){
+			nameInput.focus(); nameInput.style.boxShadow = '0 0 0 3px rgba(215,26,42,0.12)';
+			setTimeout(()=>{ nameInput.style.boxShadow = ''; }, 1400);
+			return;
+		}
+		// hide name intro and show form
+		nameIntro.style.display = 'none';
+		quizForm.style.display = '';
+		// render quiz if not already rendered
+		renderQuiz();
+		// focus first question's first input for accessibility
+		setTimeout(()=>{
+			const firstInput = quizForm.querySelector('input[type="radio"]');
+			if(firstInput) firstInput.focus();
+		}, 80);
+	}
+
+	startBtn.addEventListener('click', startQuiz);
+
+	nameInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); startQuiz(); } });
+
+	quizReset.addEventListener('click', ()=>{ 
+		// reset to name step
+		quizResult.textContent='';
+		quizForm.style.display = 'none';
+		nameIntro.style.display = '';
+		nameInput.value='';
+		nameInput.focus();
+	});
 
 	// Carousel functionality
 	let currentSlide = 0;
