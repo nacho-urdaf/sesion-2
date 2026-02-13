@@ -244,6 +244,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		}
 		// modal box
 		const modal = document.createElement('div'); modal.className = 'result-modal';
+		// add a class to emphasize slide-in from right (animation defined in CSS)
+		modal.classList.add('slide-in-right');
 		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta!' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
 		const close = document.createElement('button'); close.className = 'close-btn'; close.textContent = isCelebration ? '¡Cerrar y celebrar!' : 'Cerrar';
@@ -251,10 +253,17 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		modal.appendChild(title); modal.appendChild(para); modal.appendChild(close);
 		overlay.appendChild(modal);
 		document.body.appendChild(overlay);
+		// focus the close button for accessibility
+		setTimeout(()=>{ try{ close.focus(); }catch(e){} }, 50);
+		// play celebration sound if needed
+		if(isCelebration && typeof playCelebrationSound === 'function'){
+			modal._stopSound = playCelebrationSound();
+		}
 		// allow click on overlay to close (but not when clicking modal)
 		overlay.addEventListener('click', (ev)=>{ if(ev.target === overlay) cleanup(); });
 
 		function cleanup(){
+			try{ if(modal && modal._stopSound) modal._stopSound(); }catch(e){}
 			try{ if(canvas){ stopConfetti(canvas); document.body.removeChild(canvas); }}catch(e){}
 			if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
 		}
@@ -298,6 +307,39 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	}
 
 	function stopConfetti(canvas){ if(canvas && canvas._stop) canvas._stop(); }
+
+	// Simple celebration sound using WebAudio (returns a stop function)
+	function playCelebrationSound(){
+		try{
+			if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+			const ctx = audioCtx;
+			const now = ctx.currentTime;
+			const master = ctx.createGain(); master.gain.value = 0.0001; master.connect(ctx.destination);
+			// ramp up quickly
+			master.gain.linearRampToValueAtTime(0.8, now + 0.02);
+			const freqs = [880, 660, 520];
+			const oscs = freqs.map((f, idx)=>{
+				const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f * (1 + (idx*0.02));
+				const g = ctx.createGain(); g.gain.value = 0.0;
+				o.connect(g); g.connect(master);
+				// short envelope
+				g.gain.setValueAtTime(0.0, now);
+				g.gain.linearRampToValueAtTime(0.5/(idx+1), now + 0.02);
+				g.gain.exponentialRampToValueAtTime(0.001, now + 1.0 + (idx*0.1));
+				o.start(now);
+				o.stop(now + 1.2 + (idx*0.1));
+				return {o,g};
+			});
+			// gentle master fade out
+			master.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+			// return stop function
+			const stopFn = ()=>{
+				try{ oscs.forEach(obj=>{ try{ obj.o.stop(); }catch(e){} }); }catch(e){}
+				try{ master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.02); }catch(e){}
+			};
+			return stopFn;
+		}catch(e){ console.warn('Celebration sound failed', e); return ()=>{}; }
+	}
 
 	quizReset.addEventListener('click', ()=>{ renderQuiz(); quizResult.textContent=''; });
 	renderQuiz();
