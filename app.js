@@ -61,11 +61,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	async function tryPlayExternalEngine(){
 		const candidates = [
-			// User-provided Soundstripe page (may not allow direct audio access); kept first by request
-			'https://app.soundstripe.com/sound-effects/9717',
-			'https://www.soundjay.com/transportation/sounds/car-engine-idling-01.mp3',
-			'https://www.soundjay.com/transportation/sounds/car-engine-rev-01.mp3'
-		];
+				// Local engine file (preferred for reliable playback)
+				'assets/audio/engine.wav',
+				// User-provided Soundstripe page (kept as fallback by request, may not be playable)
+				'https://app.soundstripe.com/sound-effects/9717',
+				// External MP3 fallbacks
+				'https://www.soundjay.com/transportation/sounds/car-engine-idling-01.mp3',
+				'https://www.soundjay.com/transportation/sounds/car-engine-rev-01.mp3'
+			];
 		for(const url of candidates){
 			try{
 				const audio = new Audio();
