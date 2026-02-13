@@ -365,8 +365,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 				// clear previous answers and warnings
 				try{ document.querySelectorAll('#quiz-form input[type="radio"]').forEach(i=>i.checked=false); }catch(e){}
 				try{ document.querySelectorAll('.quiz-warn').forEach(w=>w.style.display='none'); }catch(e){}
-				// reset any quiz-internal state if present
-				try{ if(quizForm._quizState){ const qs = quizForm._quizState; if(typeof qs.showQuestion === 'function') qs.showQuestion(0); } }catch(e){}
+				// clear rendered questions so the next run starts fresh
+				try{ const qContainer = document.getElementById('quiz-questions'); if(qContainer) qContainer.innerHTML = ''; }catch(e){}
+				try{ quizForm._quizState = null; }catch(e){}
 			}, 420);
 		});
 		// allow click on overlay to close (but not when clicking modal)
