@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		modal.classList.add('slide-in-right');
 		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta! 🏁🚗🏎️' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
-		const accept = document.createElement('button'); accept.className = 'close-btn'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
+		const accept = document.createElement('button'); accept.className = 'close-btn btn btn-accent'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
 		const repeatBtn = document.createElement('button'); repeatBtn.className = 'btn'; repeatBtn.textContent = 'Repetir quiz';
 		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept); modal.appendChild(repeatBtn);
 		overlay.appendChild(modal);
