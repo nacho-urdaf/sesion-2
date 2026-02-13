@@ -351,16 +351,26 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 		accept.addEventListener('click', ()=>{ animateClose(); });
 		repeatBtn.addEventListener('click', ()=>{
-			// close modal and reset quiz state to name-step
-			try{ animateClose(); }catch(e){ /* ignore */ }
+			// close modal and restart the quiz immediately (keep name if present)
+			try{ animateClose(); }catch(e){}
 			setTimeout(()=>{
 				try{ quizResult.textContent = ''; }catch(e){}
-				try{ quizForm.style.display = 'none'; }catch(e){}
-				try{ nameIntro.style.display = ''; }catch(e){}
-				try{ nameInput.value = ''; nameInput.focus(); }catch(e){}
-				try{ if(startBtn) startBtn.style.display = ''; }catch(e){}
-				// clear previous answers
+				try{ nameIntro.style.display = 'none'; quizForm.style.display = ''; }catch(e){}
+				try{ if(startBtn) startBtn.style.display = 'none'; }catch(e){}
+				// clear previous answers and warnings
 				try{ document.querySelectorAll('#quiz-form input[type="radio"]').forEach(i=>i.checked=false); }catch(e){}
+				try{ document.querySelectorAll('.quiz-warn').forEach(w=>w.style.display='none'); }catch(e){}
+				// ensure quiz is rendered and show first question
+				try{
+					if(typeof renderQuiz === 'function') renderQuiz();
+				}catch(e){}
+				try{
+					if(quizForm._quizState && typeof quizForm._quizState.showQuestion === 'function'){
+						quizForm._quizState.showQuestion(0);
+						const firstInput = quizForm.querySelector('input[type="radio"]');
+						if(firstInput) firstInput.focus();
+					}
+				}catch(e){}
 			}, 420);
 		});
 		// allow click on overlay to close (but not when clicking modal)
