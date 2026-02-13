@@ -1,12 +1,12 @@
- :root{
-	 --bg:#08080a;
-	 --card:#0f1113;
-	 --muted:#9aa0a6;
-	 --text:#e6e9ee;
-	 --accent-blue:#0a5bd7; /* BMW M blue */
-	 --accent-red:#d71a2a;  /* BMW M red */
-	 --accent-green:#2ecc71; /* friendly green for hover */
-	 --btn-bg:transparent;
+:root{
+ 	 --bg:#08080a;
+ 	 --card:#0f1113;
+ 	 --muted:#9aa0a6;
+ 	 --text:#e6e9ee;
+ 	 --accent-blue:#0a5bd7; /* BMW M blue */
+ 	 --accent-red:#d71a2a;  /* BMW M red */
+ 	 --accent-green:#2ecc71; /* friendly green for hover (unused) */
+ 	 --btn-bg:transparent;
  }
  
  *{box-sizing:border-box}
@@ -38,9 +38,9 @@
  .muted{color:var(--muted)}
  .hero-text .hero-actions{margin:18px 0;display:flex;gap:12px}
  
-.btn{padding:12px 20px;border:3px solid var(--accent-blue);background:var(--btn-bg);color:var(--text);cursor:pointer;border-radius:2px;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:inline-block;transition:transform 180ms ease,border-color 220ms ease,box-shadow 220ms ease}
-.btn:hover{transform:translateY(-2px);border-color:var(--accent-green)}
-.btn-cta{border-color:var(--accent-blue);background:linear-gradient(90deg,rgba(10,91,215,0.12),transparent);box-shadow:0 6px 18px rgba(10,91,215,0.06)}
+.btn{padding:12px 20px;border:3px solid var(--accent-red);background:var(--btn-bg);color:var(--text);cursor:pointer;border-radius:2px;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:inline-block;transition:transform 180ms ease,border-color 220ms ease,box-shadow 220ms ease}
+.btn:hover{transform:translateY(-2px);border-color:var(--accent-blue);box-shadow:0 10px 24px rgba(10,91,215,0.08)}
+.btn-cta{border-color:var(--accent-red);background:linear-gradient(90deg,rgba(10,91,215,0.12),transparent);box-shadow:0 6px 18px rgba(10,91,215,0.06)}
 .btn-accent{border-color:var(--accent-red);background:linear-gradient(90deg,rgba(215,26,42,0.04),transparent)}
  
  .color-picker{display:flex;align-items:center;gap:10px;margin-top:12px}
@@ -163,11 +163,11 @@
 }
 
 /* Start button / name-step animations */
-#start-quiz-btn{margin-left:12px;border-color:var(--accent-blue);background:linear-gradient(90deg,rgba(10,91,215,0.12),transparent);transition:transform 220ms ease,opacity 220ms ease}
-#start-quiz-btn:hover{transform:translateY(-2px)}
+#start-quiz-btn{margin-left:12px;border-color:var(--accent-red);background:linear-gradient(90deg,rgba(10,91,215,0.12),transparent);transition:transform 220ms ease,opacity 220ms ease}
+#start-quiz-btn:hover{transform:translateY(-2px);border-color:var(--accent-blue)}
 
 /* make the start button sit comfortably away from the name input */
-#start-quiz-btn{padding:10px 18px;margin-top:8px;margin-left:0;border-color:var(--accent-blue)}
+#start-quiz-btn{padding:10px 18px;margin-top:8px;margin-left:0;border-color:var(--accent-red)}
 
 /* subtle green hover for buttons */
 .btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(46,204,113,0.08)}
