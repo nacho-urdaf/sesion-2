@@ -253,6 +253,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			showQuestion(current+1);
 		});
 
+		// allow Enter to act like "Siguiente" (but ignore when focused on name input)
+		if(quizForm._enterHandler) quizForm.removeEventListener('keydown', quizForm._enterHandler);
+		quizForm._enterHandler = function(e){
+			if(e.key !== 'Enter') return;
+			const active = document.activeElement;
+			// if focus is on the participant name input, do not intercept Enter
+			if(active && active.id === 'participant-name') return;
+			e.preventDefault();
+			// if on last question, trigger submit; otherwise trigger next
+			if(submitBtn.style.display !== 'none'){
+				submitBtn.click();
+			} else {
+				next.click();
+			}
+		};
+		quizForm.addEventListener('keydown', quizForm._enterHandler);
+
 		// show first question
 		showQuestion(0);
 	}
