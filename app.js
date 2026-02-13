@@ -193,26 +193,69 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	function renderQuiz(){
 		qContainer.innerHTML = '';
+		// render all questions but keep them hidden; we'll show one at a time
 		questions.forEach((item,i)=>{
-			const el = document.createElement('fieldset'); el.className='quiz-question';
+			const el = document.createElement('fieldset'); el.className='quiz-question'; el.dataset.index = i;
+			ele.style.display = 'none';
 			const legend = document.createElement('legend'); legend.textContent = `${i+1}. ${item.q}`;
 			el.appendChild(legend);
 			item.opts.forEach((opt,idx)=>{
 				const id = `q${i}_opt${idx}`;
-				const label = document.createElement('label'); label.style.display='block'; label.style.padding='6px 0';
+				const label = document.createElement('label'); label.style.display='block'; label.style.padding='8px 0';
 				const input = document.createElement('input'); input.type='radio'; input.name=`q${i}`; input.value=idx; input.id=id;
 				label.appendChild(input); label.append(' ' + opt);
 				el.appendChild(label);
 			});
+			// per-question inline warning
+			const warn = document.createElement('div'); warn.className='quiz-warn'; warn.style.color='var(--accent-red)'; warn.style.display='none'; warn.style.marginTop='8px'; warn.textContent = 'Por favor, selecciona una opción para continuar.';
+			el.appendChild(warn);
 			qContainer.appendChild(el);
 		});
+
+		// navigation controls
+		let nav = document.getElementById('quiz-nav');
+		if(nav) nav.remove();
+		nav = document.createElement('div'); nav.id='quiz-nav'; nav.className='quiz-nav'; nav.style.display='flex'; nav.style.justifyContent='space-between'; nav.style.alignItems='center'; nav.style.marginTop='12px';
+		const prev = document.createElement('button'); prev.type='button'; prev.className='btn'; prev.textContent='Anterior'; prev.style.opacity='0.8';
+		const next = document.createElement('button'); next.type='button'; next.className='btn btn-cta'; next.textContent='Siguiente';
+		const submitBtn = document.createElement('button'); submitBtn.type='submit'; submitBtn.className='btn btn-accent'; submitBtn.textContent='Enviar respuestas'; submitBtn.style.display='none';
+		nav.appendChild(prev); nav.appendChild(next); nav.appendChild(submitBtn);
+		quizForm.querySelector('.quiz-actions').innerHTML = ''; // clear existing actions
+		quizForm.querySelector('.quiz-actions').appendChild(nav);
+
+		// state
+		let current = 0;
+		const questionEls = Array.from(document.querySelectorAll('.quiz-question'));
+
+		function showQuestion(index){
+			current = Math.max(0, Math.min(index, questionEls.length-1));
+			questionEls.forEach((el,i)=>{ el.style.display = (i===current) ? 'block' : 'none'; el.querySelector('.quiz-warn').style.display='none'; });
+			// update nav buttons
+			prev.style.visibility = current===0 ? 'hidden' : 'visible';
+			if(current === questionEls.length-1){ next.style.display='none'; submitBtn.style.display='inline-block'; } else { next.style.display='inline-block'; submitBtn.style.display='none'; }
+		}
+
+		prev.addEventListener('click', ()=>{ showQuestion(current-1); });
+		next.addEventListener('click', ()=>{
+			// validate current has a selection
+			const sel = quizForm.querySelector(`input[name="q${current}"]:checked`);
+			if(!sel){ questionEls[current].querySelector('.quiz-warn').style.display='block'; return; }
+			showQuestion(current+1);
+		});
+
+		// show first question
+		showQuestion(0);
 	}
 
 	quizForm.addEventListener('submit', (e)=>{
 		e.preventDefault();
 		const participantName = document.getElementById('participant-name').value.trim();
 		if(!participantName){
-			alert('Por favor, ingresa tu nombre antes de enviar el quiz.');
+			// replace alert with inline warning near name field
+			const nameInput = document.getElementById('participant-name');
+			nameInput.focus();
+			nameInput.style.boxShadow = '0 0 0 3px rgba(215,26,42,0.12)';
+			setTimeout(()=>{ nameInput.style.boxShadow = ''; }, 1600);
 			return;
 		}
 		let score = 0; let total = questions.length; let unanswered=0;
