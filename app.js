@@ -221,11 +221,83 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			if(!sel){unanswered++; return}
 			if(parseInt(sel.value,10) === item.a) score++;
 		});
-		if(score === total){
-			alert(`🎉 ¡Felicidades ${participantName}! ¡Obtuviste una puntuación perfecta de ${score}/${total}! Eres un verdadero experto del BMW M4. 🏁`);
+		const isPerfect = (score === total);
+		const resultMessage = `Resultado de <strong>${participantName}</strong>: <strong>${score}/${total}</strong>. ${unanswered? `No contestadas: ${unanswered}.` : 'Todas las preguntas fueron contestadas.'}`;
+		quizResult.innerHTML = `<p>${resultMessage}</p>`;
+		if(isPerfect){
+			const celebratory = `🎉 ¡Felicidades ${participantName}! ¡Obtuviste una puntuación perfecta de ${score}/${total}! Eres un verdadero experto del BMW M4. 🏁`;
+			showResultModal(celebratory, true);
+		} else if(score > 0){
+			showResultModal(resultMessage, false);
 		}
-		quizResult.innerHTML = `<p>Resultado de <strong>${participantName}</strong>: <strong>${score}/${total}</strong>. ${unanswered? `No contestadas: ${unanswered}.` : 'Todas las preguntas fueron contestadas.'}</p>`;
 	});
+
+	function showResultModal(messageHtml, isCelebration){
+		// create overlay
+		const overlay = document.createElement('div'); overlay.className = 'result-modal-overlay';
+		// confetti canvas (if celebration)
+		let canvas = null; let confettiAnim = null;
+		if(isCelebration){
+			canvas = document.createElement('canvas'); canvas.className = 'confetti-canvas';
+			document.body.appendChild(canvas);
+			startConfetti(canvas);
+		}
+		// modal box
+		const modal = document.createElement('div'); modal.className = 'result-modal';
+		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta!' : 'Resultado del quiz';
+		const para = document.createElement('p'); para.innerHTML = messageHtml;
+		const close = document.createElement('button'); close.className = 'close-btn'; close.textContent = isCelebration ? '¡Cerrar y celebrar!' : 'Cerrar';
+		close.addEventListener('click', ()=>{ cleanup(); });
+		modal.appendChild(title); modal.appendChild(para); modal.appendChild(close);
+		overlay.appendChild(modal);
+		document.body.appendChild(overlay);
+		// allow click on overlay to close (but not when clicking modal)
+		overlay.addEventListener('click', (ev)=>{ if(ev.target === overlay) cleanup(); });
+
+		function cleanup(){
+			try{ if(canvas){ stopConfetti(canvas); document.body.removeChild(canvas); }}catch(e){}
+			if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+		}
+		// auto-dismiss after 8s
+		setTimeout(()=>{ if(document.body.contains(overlay)) cleanup(); }, 8000);
+	}
+
+	function startConfetti(canvas){
+		const ctx = canvas.getContext('2d');
+		function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+		resize(); window.addEventListener('resize', resize);
+		const particles = [];
+		const colors = ['#ffdd57','#ff6b6b','#6bc6ff','#8affb0','#d47bff'];
+		for(let i=0;i<120;i++){
+			particles.push({
+				x: Math.random()*canvas.width,
+				y: -Math.random()*canvas.height,
+				r: 6+Math.random()*8,
+				c: colors[Math.floor(Math.random()*colors.length)],
+				dx: (Math.random()-0.5)*6,
+				dy: 2+Math.random()*6,
+				rot: Math.random()*360,
+				drot: (Math.random()-0.5)*10
+			});
+		}
+		let running = true;
+		function frame(){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			for(const p of particles){
+				p.x += p.dx; p.y += p.dy; p.rot += p.drot; p.dy += 0.08; // gravity
+				ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+				ctx.fillStyle = p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r, p.r*1.6);
+				ctx.restore();
+				// recycle
+				if(p.y > canvas.height + 50){ p.y = -10; p.x = Math.random()*canvas.width; p.dy = 2+Math.random()*6; }
+			}
+			if(running) rAF = requestAnimationFrame(frame);
+		}
+		let rAF = requestAnimationFrame(frame);
+		canvas._stop = ()=>{ running=false; cancelAnimationFrame(rAF); window.removeEventListener('resize', resize); };
+	}
+
+	function stopConfetti(canvas){ if(canvas && canvas._stop) canvas._stop(); }
 
 	quizReset.addEventListener('click', ()=>{ renderQuiz(); quizResult.textContent=''; });
 	renderQuiz();
