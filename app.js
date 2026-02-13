@@ -331,7 +331,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta! 🏁🚗🏎️' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
 		const accept = document.createElement('button'); accept.className = 'close-btn'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
-		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept);
+		const repeatBtn = document.createElement('button'); repeatBtn.className = 'btn'; repeatBtn.textContent = 'Repetir quiz';
+		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept); modal.appendChild(repeatBtn);
 		overlay.appendChild(modal);
 		document.body.appendChild(overlay);
 		// focus the accept button for accessibility
@@ -349,6 +350,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		}
 
 		accept.addEventListener('click', ()=>{ animateClose(); });
+		repeatBtn.addEventListener('click', ()=>{
+			// close modal and reset quiz state to name-step
+			try{ animateClose(); }catch(e){ /* ignore */ }
+			setTimeout(()=>{
+				try{ quizResult.textContent = ''; }catch(e){}
+				try{ quizForm.style.display = 'none'; }catch(e){}
+				try{ nameIntro.style.display = ''; }catch(e){}
+				try{ nameInput.value = ''; nameInput.focus(); }catch(e){}
+				try{ if(startBtn) startBtn.style.display = ''; }catch(e){}
+				// clear previous answers
+				try{ document.querySelectorAll('#quiz-form input[type="radio"]').forEach(i=>i.checked=false); }catch(e){}
+			}, 420);
+		});
 		// allow click on overlay to close (but not when clicking modal)
 		overlay.addEventListener('click', (ev)=>{ if(ev.target === overlay) animateClose(); });
 
@@ -447,23 +461,24 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			const ctx = audioCtx;
 			const now = ctx.currentTime;
 			const master = ctx.createGain(); master.gain.value = 0.0001; master.connect(ctx.destination);
-			// ramp up quickly
-			master.gain.linearRampToValueAtTime(0.8, now + 0.02);
-			const freqs = [880, 660, 520];
+			// ramp up to a warm, gentle level
+			master.gain.linearRampToValueAtTime(0.6, now + 0.04);
+			// warmer, lower-frequency chord
+			const freqs = [440, 330, 220];
 			const oscs = freqs.map((f, idx)=>{
-				const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f * (1 + (idx*0.02));
+				const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f * (1 + (idx*0.01));
 				const g = ctx.createGain(); g.gain.value = 0.0;
 				o.connect(g); g.connect(master);
-				// short envelope
+				// smooth envelope: gentle attack, slow release
 				g.gain.setValueAtTime(0.0, now);
-				g.gain.linearRampToValueAtTime(0.5/(idx+1), now + 0.02);
-				g.gain.exponentialRampToValueAtTime(0.001, now + 1.0 + (idx*0.1));
+				g.gain.linearRampToValueAtTime(0.45/(idx+1), now + 0.06);
+				g.gain.exponentialRampToValueAtTime(0.0001, now + 2.0 + (idx*0.15));
 				o.start(now);
-				o.stop(now + 1.2 + (idx*0.1));
+				o.stop(now + 2.2 + (idx*0.15));
 				return {o,g};
 			});
 			// gentle master fade out
-			master.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+			master.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
 			// return stop function
 			const stopFn = ()=>{
 				try{ oscs.forEach(obj=>{ try{ obj.o.stop(); }catch(e){} }); }catch(e){}
