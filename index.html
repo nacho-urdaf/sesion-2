@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>BMW M4 Coupé 2014 — Landing</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header class="site-header">
+		<div class="wrap">
+			<a class="brand" href="#">BMW M4 Coupé 2014</a>
+			<nav class="nav">
+				<a href="#specs">Especificaciones</a>
+				<a href="#timeline">Línea de Tiempo</a>
+				<a href="#gallery">Galería</a>
+				<a href="#quiz">Quiz</a>
+			</nav>
+		</div>
+	</header>
+
+	<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">☾</button>
+
+	<main>
+		<section id="hero" class="hero">
+			<div class="wrap hero-grid">
+				<div class="hero-text">
+					<h1>El rugido. La precisión. El M4 Coupé 2014.</h1>
+					<p class="muted">Motor S55 biturbo, dinámica M y diseño que contagia adrenalina.</p>
+					<div class="hero-actions">
+						<button id="cta-drive" class="btn btn-cta">PROBAR AHORA</button>
+						<button id="engine-btn" class="btn btn-accent">RUGIDO MOTOR</button>
+					</div>
+
+					<div class="color-picker" aria-label="Color selector">
+						<span class="picker-label">Colores:</span>
+						<button class="color-swatch" data-color="default" aria-label="Color Alpine"> </button>
+						<button class="color-swatch" data-color="black" aria-label="Color Negro"> </button>
+						<button class="color-swatch" data-color="red" aria-label="Color Rojo"> </button>
+					</div>
+				</div>
+
+				<div class="hero-media">
+					<div class="car-frame">
+						<img id="car-image" class="color-default" src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1600&auto=format&fit=crop" alt="BMW M4 Coupé"/>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="specs" class="specs wrap">
+			<h2>Especificaciones</h2>
+			<div class="spec-grid">
+				<div class="spec">
+					<h3>Motor</h3>
+					<p>S55 3.0L Twin-Turbo inline-6</p>
+				</div>
+				<div class="spec">
+					<h3>Potencia</h3>
+					<p>431 - 450 CV (según versión)</p>
+				</div>
+				<div class="spec">
+					<h3>Torque</h3>
+					<p>550 Nm</p>
+				</div>
+				<div class="spec">
+					<h3>Transmisión</h3>
+					<p>Manual 6 vel / DCT 7 vel (opcional)</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="timeline" class="timeline wrap">
+			<h2>Línea de Tiempo</h2>
+			<ol class="timeline-list">
+				<li><strong>M3 E30</strong> — El origen de la leyenda.</li>
+				<li><strong>M3 E36</strong> — Rendimiento y popularidad.</li>
+				<li><strong>M3 E46</strong> — Clásico moderno.</li>
+				<li><strong>M3 E92</strong> — V8 y pura emoción.</li>
+				<li><strong>M4 F82 (2014)</strong> — Debut del S55 y nuevo estándar.</li>
+			</ol>
+		</section>
+
+		<section id="gallery" class="gallery wrap">
+			<h2>Galería</h2>
+			<div class="gallery-grid">
+				<img src="https://source.unsplash.com/800x600/?bmw,m4&sig=1" alt="M4 1" loading="lazy">
+				<img src="https://source.unsplash.com/800x600/?bmw,m4&sig=2" alt="M4 2" loading="lazy">
+				<img src="https://source.unsplash.com/800x600/?bmw,car&sig=3" alt="M4 3" loading="lazy">
+				<img src="https://source.unsplash.com/800x600/?bmw,sports-car&sig=4" alt="M4 4" loading="lazy">
+				<img src="https://source.unsplash.com/800x600/?bmw,m4,interior&sig=5" alt="M4 5" loading="lazy">
+				<img src="https://source.unsplash.com/800x600/?bmw,m4,driving&sig=6" alt="M4 6" loading="lazy">
+			</div>
+		</section>
+
+		<section id="quiz" class="quiz wrap">
+			<h2>Quiz: ¿Cuánto sabes del M4?</h2>
+			<form id="quiz-form" class="quiz-form">
+				<div id="quiz-questions"></div>
+				<div class="quiz-actions">
+					<button type="submit" class="btn btn-cta">Enviar respuestas</button>
+					<button type="button" id="quiz-reset" class="btn">Reiniciar</button>
+				</div>
+			</form>
+			<div id="quiz-result" class="quiz-result" aria-live="polite"></div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<div class="wrap">
+			<p>Contacto: <a href="mailto:nachoswal7@gmail.com">nachoswal7@gmail.com</a> • <a href="https://github.com/nacho-urdaf" target="_blank" rel="noopener">github.com/nacho-urdaf</a></p>
+			<p class="muted">Diseño minimalista — Dark Mode por defecto.</p>
+		</div>
+	</footer>
+
+	<script src="app.js" defer></script>
+</body>
+</html>
