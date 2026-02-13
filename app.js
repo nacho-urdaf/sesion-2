@@ -176,18 +176,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		document.body.appendChild(overlay);
 	}
 
-	// Quiz implementation
+	// Quiz implementation (filtered per user request: keep questions 1,2,4,5,6,8)
 	const questions = [
 		{q:'¿Qué motor monta el M4 Coupé 2014?', opts:['S50','S65','S55','N54'], a:2},
 		{q:'¿Cuántos litros tiene el motor S55?', opts:['2.0L','3.0L','4.0L','3.5L'], a:1},
-		{q:'¿El M4 F82 reemplazó a cuál modelo?', opts:['M3 E46','M3 E92','M3 E30','M3 E36'], a:1},
 		{q:'¿Cuál es el tipo de configuración del motor?', opts:['V8','Inline-6','V6','Flat-6'], a:1},
 		{q:'¿El S55 es atmosférico o turbo?', opts:['Atmosférico','Biturbo','Turbo simple','Híbrido'], a:1},
 		{q:'¿Cuál de estas transmisiones estaba disponible?', opts:['CVT','Manual 6','AMT','Dual Clutch 7'], a:3},
-		{q:'¿En qué año debutó el M4 F82?', opts:['2012','2013','2014','2015'], a:2},
-		{q:'¿La versión estándar produce aprox. cuántos CV?', opts:['250','350','431','520'], a:2},
-		{q:'¿BMW M es la división de qué?', opts:['Audi Sport','BMW Motorsport','Mercedes AMG','Porsche Motorsport'], a:1},
-		{q:'¿El M4 Coupé es basado originalmente en?', opts:['Serie 2','Serie 3','Serie 4','Serie 5'], a:2}
+		{q:'¿La versión estándar produce aprox. cuántos CV?', opts:['250','350','431','520'], a:2}
 	];
 
 	const qContainer = document.getElementById('quiz-questions');
