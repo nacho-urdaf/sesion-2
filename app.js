@@ -61,7 +61,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	async function tryPlayExternalEngine(){
 		const candidates = [
-				// Local engine file (preferred for reliable playback)
+				// Local engine MP3 (preferred for reliable playback)
+				'assets/audio/engine.mp3',
+				// Local WAV fallback (kept for redundancy)
 				'assets/audio/engine.wav',
 				// User-provided Soundstripe page (kept as fallback by request, may not be playable)
 				'https://app.soundstripe.com/sound-effects/9717',
