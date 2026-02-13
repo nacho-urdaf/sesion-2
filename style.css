@@ -27,7 +27,9 @@
  .nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:600}
  .nav a:hover{color:var(--text)}
  
- .theme-toggle{position:fixed;right:18px;bottom:18px;background:var(--card);color:var(--text);border:2px solid rgba(255,255,255,0.04);padding:10px;border-radius:6px;cursor:pointer;z-index:100}
+ .theme-toggle{position:fixed;right:18px;bottom:18px;background:var(--card);color:var(--text);border:2px solid var(--accent-blue);padding:12px 14px;border-radius:6px;cursor:pointer;z-index:100;font-size:18px;font-weight:700;transition:all 300ms ease;box-shadow:0 4px 12px rgba(10,91,215,0.2)}
+.theme-toggle:hover{transform:scale(1.08);box-shadow:0 6px 18px rgba(10,91,215,0.3);background:linear-gradient(135deg,rgba(10,91,215,0.1),rgba(215,26,42,0.1))}
+.theme-toggle:active{transform:scale(0.95)}
  
  .hero{padding:48px 0}
  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
