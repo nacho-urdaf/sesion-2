@@ -61,11 +61,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	async function tryPlayExternalEngine(){
 		const candidates = [
-				// Local engine MP3 (preferred for reliable playback)
+				// User-requested Epidemic Sound page (may not be a direct audio file)
+				'https://www.epidemicsound.com/sound-effects/tracks/01f2b8bb-fba7-4248-8280-8d534a85613a/',
+				// Local engine MP3 (fallback for reliable playback)
 				'assets/audio/engine.mp3',
 				// Local WAV fallback (kept for redundancy)
 				'assets/audio/engine.wav',
-				// User-provided Soundstripe page (kept as fallback by request, may not be playable)
+				// Previously used Soundstripe page (kept as fallback)
 				'https://app.soundstripe.com/sound-effects/9717',
 				// External MP3 fallbacks
 				'https://www.soundjay.com/transportation/sounds/car-engine-idling-01.mp3',
