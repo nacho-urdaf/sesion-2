@@ -18,19 +18,28 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		themeBtn.textContent = body.classList.contains('light') ? '☼' : '☾';
 	}
 
-	// Color picker - applies CSS class to image
+	// Color picker - change hero image src to a color-specific photo (local override)
 	const swatches = document.querySelectorAll('.color-swatch');
 	const carImage = document.getElementById('car-image');
+	const originalSrc = carImage.src;
+	const colorMap = {
+		'black': 'https://www.diariomotor.com/imagenes/2015/10/bmw-m4-gts-2016-6.jpg?class=M',
+		'red': 'https://thumbs.dreamstime.com/b/un-coche-rojo-de-bmw-m-72594621.jpg',
+		'blue': 'https://soymotor.com/sites/default/files/imagenes/noticia/bmw-delantera-m4-soymotor.jpg',
+		'amarillo-oro': 'https://images.coches.com/_vn_/bmw/M4-Coupe-F82-USA/bmw_m4-coupe-f82-usa-2014_r5.jpg?w=768&h=508&func=fit',
+		'morado': 'https://i.pinimg.com/736x/ee/09/ed/ee09ed06924be2f5e33e0caa3a101274.jpg'
+	};
 	swatches.forEach(s => s.addEventListener('click', ()=>{
 		const color = s.dataset.color || 'default';
-		// remove all color classes
-		carImage.classList.remove('color-default','color-black','color-red','color-blue','color-green');
-		// black should leave original (default)
-		if(color === 'black' || color === 'default'){
-			carImage.classList.add('color-default');
+		// if color has a mapped URL, set it; otherwise restore original
+		if(color && colorMap[color]){
+			carImage.src = colorMap[color];
 		} else {
-			carImage.classList.add(`color-${color}`);
+			carImage.src = originalSrc;
 		}
+		// update active visual on swatches
+		swatches.forEach(x=>x.classList.remove('active'));
+		s.classList.add('active');
 	}));
 
 	// CTA: scroll to specs

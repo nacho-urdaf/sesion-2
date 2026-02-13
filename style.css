@@ -49,7 +49,11 @@
  .color-swatch[data-color="black"]{background:#0c0c0c}
  .color-swatch[data-color="red"]{background:var(--accent-red)}
 .color-swatch[data-color="blue"]{background:linear-gradient(90deg,var(--accent-blue),#1e64ff)}
-.color-swatch[data-color="green"]{background:linear-gradient(90deg,#1db954,#0bbf3b)}
+.color-swatch[data-color="red"]{background:var(--accent-red)}
+.color-swatch[data-color="black"]{background:linear-gradient(90deg,#111,#444)}
+.color-swatch[data-color="amarillo-oro"]{background:linear-gradient(90deg,#e6c200,#f6d86b)}
+.color-swatch[data-color="morado"]{background:linear-gradient(90deg,#6a1b9a,#9c27b0)}
+.color-swatch.active{outline:3px solid rgba(255,255,255,0.06);transform:scale(1.05)}
  
  .hero-media .car-frame{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:6px;border:1px solid rgba(255,255,255,0.03)}
  .hero-media img{width:100%;height:auto;display:block;border-radius:4px;transition:filter 300ms ease,transform 300ms ease}
