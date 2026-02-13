@@ -48,6 +48,8 @@
  .color-swatch[data-color="default"]{background:linear-gradient(90deg,var(--accent-blue),#001f7a)}
  .color-swatch[data-color="black"]{background:#0c0c0c}
  .color-swatch[data-color="red"]{background:var(--accent-red)}
+.color-swatch[data-color="blue"]{background:linear-gradient(90deg,var(--accent-blue),#1e64ff)}
+.color-swatch[data-color="green"]{background:linear-gradient(90deg,#1db954,#0bbf3b)}
  
  .hero-media .car-frame{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:6px;border:1px solid rgba(255,255,255,0.03)}
  .hero-media img{width:100%;height:auto;display:block;border-radius:4px;transition:filter 300ms ease,transform 300ms ease}
