@@ -115,8 +115,13 @@
 #cta-drive:hover{ border-color: var(--accent-red); box-shadow:0 10px 24px rgba(215,26,42,0.12) }
 
 /* Quiz nav buttons: make them blue by default and use royal-blue on hover */
-#quiz-nav .btn{ border-color: var(--accent-blue) !important; }
-#quiz-nav .btn:hover{ border-color: var(--accent-royal) !important; box-shadow:0 10px 24px rgba(7,58,154,0.10) }
+/* Quiz nav/buttons inside quiz: blue border + royal hover */
+#quiz-nav .btn, .quiz .quiz-actions .btn, .quiz .btn, .quiz-actions .btn{ border-color: var(--accent-blue) !important; }
+#quiz-nav .btn:hover, .quiz .quiz-actions .btn:hover, .quiz .btn:hover, .quiz-actions .btn:hover{ border-color: var(--accent-royal) !important; box-shadow:0 10px 24px rgba(7,58,154,0.10) }
+
+/* Modal accept button should match quiz button styles (blue border + royal hover) */
+.result-modal .btn{ border-color: var(--accent-blue); }
+.result-modal .btn:hover{ border-color: var(--accent-royal); box-shadow:0 10px 24px rgba(7,58,154,0.10) }
  
  .site-footer{padding:24px 0;border-top:1px solid rgba(255,255,255,0.03);margin-top:28px}
 .footer-links{display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap}
