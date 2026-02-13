@@ -149,6 +149,43 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	quizReset.addEventListener('click', ()=>{ renderQuiz(); quizResult.textContent=''; });
 	renderQuiz();
 
+	// Carousel functionality
+	let currentSlide = 0;
+	const slides = document.querySelectorAll('.carousel-slide');
+	const indicators = document.querySelectorAll('.indicator');
+	const prevBtn = document.querySelector('.carousel-prev');
+	const nextBtn = document.querySelector('.carousel-next');
+
+	function showSlide(index){
+		if(index >= slides.length) currentSlide = 0;
+		if(index < 0) currentSlide = slides.length - 1;
+		slides.forEach(s => s.classList.remove('active'));
+		indicators.forEach(i => i.classList.remove('active'));
+		slides[currentSlide].classList.add('active');
+		indicators[currentSlide].classList.add('active');
+	}
+
+	prevBtn?.addEventListener('click', ()=>{ currentSlide--; showSlide(currentSlide); });
+	nextBtn?.addEventListener('click', ()=>{ currentSlide++; showSlide(currentSlide); });
+	indicators.forEach(ind => ind.addEventListener('click', (e)=>{ currentSlide = parseInt(e.target.dataset.index, 10); showSlide(currentSlide); }));
+
+	// Timeline collapsible items
+	const timelineHeaders = document.querySelectorAll('.timeline-header');
+	timelineHeaders.forEach(header => {
+		header.addEventListener('click', ()=>{
+			const toggle = header.querySelector('.timeline-toggle');
+			const contentId = header.dataset.timeline + '-content';
+			const content = document.getElementById(contentId);
+			if(content.style.display === 'none'){
+				content.style.display = 'block';
+				toggle.textContent = '-';
+			} else {
+				content.style.display = 'none';
+				toggle.textContent = '+';
+			}
+		});
+	});
+
 	// small accessibility: close lightbox with Escape
 	document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const overlays = document.querySelectorAll('body > div'); overlays.forEach(o=>{ if(o && o.style && o.style.zIndex==='9999') document.body.removeChild(o); }); }});
 });
