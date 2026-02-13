@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		modal.classList.add('slide-in-right');
 		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta! 🏁🚗🏎️' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
-		const accept = document.createElement('button'); accept.className = 'close-btn btn btn-accent'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
-		const repeatBtn = document.createElement('button'); repeatBtn.className = 'btn btn-accent close-btn'; repeatBtn.textContent = 'Repetir quiz';
+		const accept = document.createElement('button'); accept.type = 'button'; accept.className = 'close-btn btn btn-accent'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
+		const repeatBtn = document.createElement('button'); repeatBtn.type = 'button'; repeatBtn.className = 'btn btn-accent close-btn'; repeatBtn.textContent = 'Repetir quiz';
 		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept); modal.appendChild(repeatBtn);
 		overlay.appendChild(modal);
 		document.body.appendChild(overlay);
@@ -349,8 +349,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			modal.addEventListener('animationend', cleanup, {once:true});
 		}
 
-		accept.addEventListener('click', ()=>{ animateClose(); });
-		repeatBtn.addEventListener('click', ()=>{
+		accept.addEventListener('click', (e)=>{ e.preventDefault(); animateClose(); });
+		repeatBtn.addEventListener('click', (e)=>{
+			e.preventDefault();
 			// close modal and go back to the name entry step so the user can start again
 			try{ animateClose(); }catch(e){}
 			setTimeout(()=>{
