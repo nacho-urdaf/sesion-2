@@ -78,6 +78,7 @@
 .carousel-slide{display:none;width:100%;height:100%;animation:fadeIn 300ms ease}
 .carousel-slide.active{display:flex;align-items:center;justify-content:center}
 .carousel-slide img{width:100%;height:600px;object-fit:cover}
+.carousel-caption{padding:12px;background:rgba(0,0,0,0.6);color:white;font-size:14px;margin:0;text-align:center;font-weight:500;line-height:1.4}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:white;border:none;padding:12px 14px;cursor:pointer;font-size:24px;z-index:10;border-radius:4px}
 .carousel-prev{left:12px}
 .carousel-next{right:12px}
@@ -89,12 +90,20 @@
 
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-.quiz-form{display:block;margin-top:12px}
+.quiz-intro{margin-bottom:16px;padding:12px;background:var(--card);border-radius:6px;border:1px solid rgba(255,255,255,0.02)}
+.quiz-intro label{display:block;margin-bottom:6px;font-weight:600;color:var(--text)}
+.quiz-input{width:100%;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--accent-blue);border-radius:4px;color:var(--text);font-size:14px}
+.quiz-input::placeholder{color:var(--muted)}
+.quiz-input:focus{outline:none;border-color:var(--accent-blue);box-shadow:0 0 8px rgba(10,91,215,0.2)}
  .quiz-question{background:var(--card);padding:12px;border-radius:6px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02)}
  .quiz-actions{display:flex;gap:10px}
  .quiz-result{margin-top:12px;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px}
  
  .site-footer{padding:24px 0;border-top:1px solid rgba(255,255,255,0.03);margin-top:28px}
+.footer-links{display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap}
+.footer-link{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);transition:all 200ms ease;padding:8px 12px;border-radius:4px;border:1px solid transparent}
+.footer-link:hover{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(10,91,215,0.05)}
+.footer-link .icon{font-size:18px}
  
  /* light theme */
  body.light{--bg:#f6f7fb;--card:#ffffff;--muted:#4b5563;--text:#0b0b0b}

@@ -137,13 +137,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	quizForm.addEventListener('submit', (e)=>{
 		e.preventDefault();
+		const participantName = document.getElementById('participant-name').value.trim();
+		if(!participantName){
+			alert('Por favor, ingresa tu nombre antes de enviar el quiz.');
+			return;
+		}
 		let score = 0; let total = questions.length; let unanswered=0;
 		questions.forEach((item,i)=>{
 			const sel = quizForm.querySelector(`input[name="q${i}"]:checked`);
 			if(!sel){unanswered++; return}
 			if(parseInt(sel.value,10) === item.a) score++;
 		});
-		quizResult.innerHTML = `Resultado: <strong>${score}/${total}</strong>. ${unanswered? `No contestadas: ${unanswered}.` : ''}`;
+		if(score === total){
+			alert(`🎉 ¡Felicidades ${participantName}! ¡Obtuviste una puntuación perfecta de ${score}/${total}! Eres un verdadero experto del BMW M4. 🏁`);
+		}
+		quizResult.innerHTML = `<p>Resultado de <strong>${participantName}</strong>: <strong>${score}/${total}</strong>. ${unanswered? `No contestadas: ${unanswered}.` : 'Todas las preguntas fueron contestadas.'}</p>`;
 	});
 
 	quizReset.addEventListener('click', ()=>{ renderQuiz(); quizResult.textContent=''; });
