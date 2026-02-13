@@ -429,16 +429,24 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			setTimeout(()=>{ nameInput.style.boxShadow = ''; }, 1400);
 			return;
 		}
-		// hide name intro and show form
-		nameIntro.style.display = 'none';
-		quizForm.style.display = '';
-		// render quiz if not already rendered
-		renderQuiz();
-		// focus first question's first input for accessibility
-		setTimeout(()=>{
-			const firstInput = quizForm.querySelector('input[type="radio"]');
-			if(firstInput) firstInput.focus();
-		}, 80);
+		// animate fade-out of nameIntro, then show quiz
+		nameIntro.classList.add('fade-out');
+		// also add small button hide for visual polish
+		if(startBtn) startBtn.classList.add('btn-hide');
+
+		function after(){
+			nameIntro.removeEventListener('animationend', after);
+			nameIntro.style.display = 'none';
+			quizForm.style.display = '';
+			// render quiz if not already rendered
+			renderQuiz();
+			// focus first question's first input for accessibility
+			setTimeout(()=>{
+				const firstInput = quizForm.querySelector('input[type="radio"]');
+				if(firstInput) firstInput.focus();
+			}, 80);
+		}
+		nameIntro.addEventListener('animationend', after);
 	}
 
 	startBtn.addEventListener('click', startQuiz);

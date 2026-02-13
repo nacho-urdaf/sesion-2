@@ -150,3 +150,19 @@
 	.result-modal{padding:16px;border-width:2px}
 	.result-modal h3{font-size:18px}
 }
+
+/* Start button / name-step animations */
+#start-quiz-btn{margin-left:12px;border-color:var(--accent-blue);background:linear-gradient(90deg,rgba(10,91,215,0.12),transparent);transition:transform 220ms ease,opacity 220ms ease}
+#start-quiz-btn:hover{transform:translateY(-2px)}
+
+.fade-out{animation:fadeSlideOut 360ms cubic-bezier(.2,.9,.3,1) forwards}
+
+@keyframes fadeSlideOut{
+	from{opacity:1;transform:translateX(0)}
+	60%{opacity:1;transform:translateX(-8%)}
+	to{opacity:0;transform:translateX(-40px) scale(.98)}
+}
+
+/* small helper to animate only the button if desired */
+.btn-hide{animation:slideOutLeft 320ms ease forwards}
+@keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-28px) scale(.98)}}
