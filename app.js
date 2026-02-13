@@ -23,8 +23,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	const carImage = document.getElementById('car-image');
 	swatches.forEach(s => s.addEventListener('click', ()=>{
 		const color = s.dataset.color || 'default';
-		carImage.classList.remove('color-default','color-black','color-red');
-		carImage.classList.add(`color-${color}`);
+		// remove all color classes
+		carImage.classList.remove('color-default','color-black','color-red','color-blue','color-green');
+		// black should leave original (default)
+		if(color === 'black' || color === 'default'){
+			carImage.classList.add('color-default');
+		} else {
+			carImage.classList.add(`color-${color}`);
+		}
 	}));
 
 	// CTA: scroll to specs
@@ -32,16 +38,49 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		document.getElementById('specs').scrollIntoView({behavior:'smooth'});
 	});
 
-	// Engine sound using WebAudio (simple rumble placeholder)
-	let audioCtx = null; let enginePlaying = false; let engineNodes = null;
+	// Engine sound: try loading a real engine audio from candidates, fallback to WebAudio synth
+	let audioCtx = null; let enginePlaying = false; let engineNodes = null; let engineAudio = null;
 	const engineBtn = document.getElementById('engine-btn');
 	engineBtn.addEventListener('click', ()=>{
-		if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
 		if(enginePlaying){ stopEngine(); return; }
-		startEngine();
+		// try to load external audio first
+		tryPlayExternalEngine().catch(()=>{
+			if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+			startEngineSynth();
+		});
 	});
 
-	function startEngine(){
+	async function tryPlayExternalEngine(){
+		const candidates = [
+			'https://www.soundjay.com/transportation/sounds/car-engine-idling-01.mp3',
+			'https://www.soundjay.com/transportation/sounds/car-engine-rev-01.mp3'
+		];
+		for(const url of candidates){
+			try{
+				const audio = new Audio();
+				audio.src = url;
+				audio.preload = 'auto';
+				audio.crossOrigin = 'anonymous';
+				await new Promise((resolve, reject)=>{
+					const to = setTimeout(()=>reject(new Error('timeout')), 4000);
+					audio.addEventListener('canplaythrough', ()=>{ clearTimeout(to); resolve(); }, {once:true});
+					audio.addEventListener('error', ()=>{ clearTimeout(to); reject(new Error('error')); }, {once:true});
+				});
+				// if loaded, play
+				engineAudio = audio;
+				engineAudio.loop = true;
+				await engineAudio.play();
+				enginePlaying = true; engineBtn.classList.add('playing'); engineBtn.textContent = 'DETENER RUGIDO';
+				return; // success
+			}catch(err){
+				// try next
+				continue;
+			}
+		}
+		throw new Error('No external audio loaded');
+	}
+
+	function startEngineSynth(){
 		const ctx = audioCtx;
 		const base = ctx.createOscillator();
 		const lfo = ctx.createOscillator();
@@ -75,6 +114,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	}
 
 	function stopEngine(){
+		// stop HTMLAudio if playing
+		if(engineAudio){
+			try{ engineAudio.pause(); engineAudio.currentTime = 0; }catch(e){}
+			engineAudio = null;
+			enginePlaying = false; engineBtn.classList.remove('playing'); engineBtn.textContent = 'RUGIDO MOTOR';
+			return;
+		}
 		if(!engineNodes) return;
 		const {base,lfo,gain} = engineNodes;
 		const ctx = audioCtx;
@@ -85,9 +131,22 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		},600);
 	}
 
-	// Gallery lightbox
-	const galleryImgs = document.querySelectorAll('.gallery-grid img');
-	galleryImgs.forEach(img=>img.addEventListener('click', ()=>openLightbox(img.src, img.alt)));
+	// Gallery lightbox and captions based on filename
+	const carouselSlides = document.querySelectorAll('.carousel-slide');
+	carouselSlides.forEach(slide => {
+		const img = slide.querySelector('img');
+		if(!img) return;
+		// derive a friendly caption from filename
+		const src = img.getAttribute('src') || '';
+		const file = decodeURIComponent(src.split('/').pop() || '').replace(/\.[^/.]+$/, '');
+		const friendly = file.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+		let caption = slide.querySelector('.carousel-caption');
+		if(!caption){ caption = document.createElement('p'); caption.className='carousel-caption'; slide.appendChild(caption); }
+		caption.textContent = friendly;
+		// attach lightbox
+		img.style.cursor = 'zoom-in';
+		img.addEventListener('click', ()=> openLightbox(img.src, img.alt || friendly));
+	});
 
 	function openLightbox(src, alt){
 		const overlay = document.createElement('div');
