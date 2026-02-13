@@ -58,7 +58,7 @@ Simplemente abre `index.html` en tu navegador:
 open index.html
 ```
 
-### Opción 2: Servir con un servidor local (recomendado)
+### Opción 2: Servir con un servidor local (recomendado para desarrollo)
 ```bash
 # Python 3
 python3 -m http.server 8000
@@ -70,6 +70,13 @@ npx http-server
 ruby -run -ehttpd . -p8000
 ```
 Luego accede a `http://localhost:8000`
+
+### Opción 3: GitHub Pages (Producción) 🚀
+La landing page está desplegada en GitHub Pages:
+
+**URL:** https://nacho-urdaf.github.io/sesion-2/
+
+Los cambios se publican automáticamente cuando haces push a `main`.
 
 ## Variables CSS (Dark Mode)
 
