@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	async function tryPlayExternalEngine(){
 		const candidates = [
-				// User-requested Epidemic Sound page (may not be a direct audio file)
-				'https://www.epidemicsound.com/sound-effects/tracks/01f2b8bb-fba7-4248-8280-8d534a85613a/',
+				// Local user-provided engine sound found in repo root
+				'engine sound.mp3',
 				// Local engine MP3 (fallback for reliable playback)
 				'assets/audio/engine.mp3',
 				// Local WAV fallback (kept for redundancy)
