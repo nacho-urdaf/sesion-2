@@ -61,6 +61,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	async function tryPlayExternalEngine(){
 		const candidates = [
+			// User-provided Soundstripe page (may not allow direct audio access); kept first by request
+			'https://app.soundstripe.com/sound-effects/9717',
 			'https://www.soundjay.com/transportation/sounds/car-engine-idling-01.mp3',
 			'https://www.soundjay.com/transportation/sounds/car-engine-rev-01.mp3'
 		];
