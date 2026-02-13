@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		// render all questions but keep them hidden; we'll show one at a time
 		questions.forEach((item,i)=>{
 			const el = document.createElement('fieldset'); el.className='quiz-question'; el.dataset.index = i;
-			ele.style.display = 'none';
+			el.style.display = 'none';
 			const legend = document.createElement('legend'); legend.textContent = `${i+1}. ${item.q}`;
 			el.appendChild(legend);
 			item.opts.forEach((opt,idx)=>{
@@ -216,9 +216,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		let nav = document.getElementById('quiz-nav');
 		if(nav) nav.remove();
 		nav = document.createElement('div'); nav.id='quiz-nav'; nav.className='quiz-nav'; nav.style.display='flex'; nav.style.justifyContent='space-between'; nav.style.alignItems='center'; nav.style.gap='12px'; nav.style.marginTop='12px';
-		const prev = document.createElement('button'); prev.type='button'; prev.className='btn'; prev.textContent='Anterior'; prev.style.opacity='0.8';
-		const next = document.createElement('button'); next.type='button'; next.className='btn btn-cta'; next.textContent='Siguiente';
-		const submitBtn = document.createElement('button'); submitBtn.type='submit'; submitBtn.className='btn btn-accent'; submitBtn.textContent='Enviar respuestas'; submitBtn.style.display='none';
+		const prev = document.createElement('button'); prev.type='button'; prev.className='btn'; prev.id='quiz-prev'; prev.textContent='Anterior'; prev.style.opacity='0.8';
+		const next = document.createElement('button'); next.type='button'; next.className='btn btn-cta'; next.id='quiz-next'; next.textContent='Siguiente';
+		const submitBtn = document.createElement('button'); submitBtn.type='submit'; submitBtn.className='btn btn-accent'; submitBtn.id='quiz-submit'; submitBtn.textContent='Enviar respuestas'; submitBtn.style.display='none';
 		const progress = document.createElement('div'); progress.className='quiz-progress'; progress.style.fontWeight='700'; progress.style.minWidth='140px'; progress.style.textAlign='center'; progress.textContent = `Pregunta 1/${questions.length}`;
 		nav.appendChild(prev);
 		nav.appendChild(progress);
@@ -238,6 +238,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 		function showQuestion(index){
 			current = Math.max(0, Math.min(index, questionEls.length-1));
 			questionEls.forEach((el,i)=>{ el.style.display = (i===current) ? 'block' : 'none'; el.querySelector('.quiz-warn').style.display='none'; });
+			// micro animation for question entry
+			const activeEl = questionEls[current];
+			if(activeEl){
+				activeEl.classList.remove('question-enter');
+				void activeEl.offsetWidth; // force reflow
+				activeEl.classList.add('question-enter');
+				setTimeout(()=>{ try{ activeEl.classList.remove('question-enter'); }catch(e){} }, 420);
+			}
 			// update nav buttons
 			prev.style.visibility = current===0 ? 'hidden' : 'visible';
 			if(current === questionEls.length-1){ next.style.display='none'; submitBtn.style.display='inline-block'; } else { next.style.display='inline-block'; submitBtn.style.display='none'; }
@@ -269,6 +277,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			}
 		};
 		quizForm.addEventListener('keydown', quizForm._enterHandler);
+
+		// expose quiz control state for external handlers (startQuiz will reuse it)
+		quizForm._quizState = { showQuestion, prev, next, submitBtn, questionEls, getCurrent: ()=>current };
 
 		// show first question
 		showQuestion(0);
@@ -305,40 +316,50 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	function showResultModal(messageHtml, isCelebration){
 		// create overlay
 		const overlay = document.createElement('div'); overlay.className = 'result-modal-overlay';
-		// confetti canvas (if celebration)
-		let canvas = null; let confettiAnim = null;
+		// celebration canvas (if celebration) - used for confetti and fireworks
+		let canvas = null;
 		if(isCelebration){
 			canvas = document.createElement('canvas'); canvas.className = 'confetti-canvas';
 			document.body.appendChild(canvas);
 			startConfetti(canvas);
+			startFireworks(canvas);
 		}
-		// modal box
+		// modal box (card)
 		const modal = document.createElement('div'); modal.className = 'result-modal';
-		// add a class to emphasize slide-in from right (animation defined in CSS)
+		// animate entry from right
 		modal.classList.add('slide-in-right');
-		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta!' : 'Resultado del quiz';
+		const title = document.createElement('h3'); title.textContent = isCelebration ? '¡Puntuación perfecta! 🏁🚗🏎️' : 'Resultado del quiz';
 		const para = document.createElement('p'); para.innerHTML = messageHtml;
-		const close = document.createElement('button'); close.className = 'close-btn'; close.textContent = isCelebration ? '¡Cerrar y celebrar!' : 'Cerrar';
-		close.addEventListener('click', ()=>{ cleanup(); });
-		modal.appendChild(title); modal.appendChild(para); modal.appendChild(close);
+		const accept = document.createElement('button'); accept.className = 'close-btn'; accept.textContent = isCelebration ? 'Aceptar 🎉' : 'Cerrar';
+		modal.appendChild(title); modal.appendChild(para); modal.appendChild(accept);
 		overlay.appendChild(modal);
 		document.body.appendChild(overlay);
-		// focus the close button for accessibility
-		setTimeout(()=>{ try{ close.focus(); }catch(e){} }, 50);
+		// focus the accept button for accessibility
+		setTimeout(()=>{ try{ accept.focus(); }catch(e){} }, 50);
 		// play celebration sound if needed
 		if(isCelebration && typeof playCelebrationSound === 'function'){
 			modal._stopSound = playCelebrationSound();
 		}
+
+		function animateClose(){
+			// animate modal sliding out to left
+			modal.classList.remove('slide-in-right');
+			modal.classList.add('slide-out-left');
+			modal.addEventListener('animationend', cleanup, {once:true});
+		}
+
+		accept.addEventListener('click', ()=>{ animateClose(); });
 		// allow click on overlay to close (but not when clicking modal)
-		overlay.addEventListener('click', (ev)=>{ if(ev.target === overlay) cleanup(); });
+		overlay.addEventListener('click', (ev)=>{ if(ev.target === overlay) animateClose(); });
 
 		function cleanup(){
 			try{ if(modal && modal._stopSound) modal._stopSound(); }catch(e){}
-			try{ if(canvas){ stopConfetti(canvas); document.body.removeChild(canvas); }}catch(e){}
+			try{ if(canvas){ stopConfetti(canvas); stopFireworks(canvas); document.body.removeChild(canvas); }}catch(e){}
 			if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
 		}
-		// auto-dismiss after 8s
-		setTimeout(()=>{ if(document.body.contains(overlay)) cleanup(); }, 8000);
+
+		// auto-dismiss after 8s via animateClose
+		setTimeout(()=>{ if(document.body.contains(overlay)) animateClose(); }, 8000);
 	}
 
 	function startConfetti(canvas){
@@ -377,6 +398,47 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	}
 
 	function stopConfetti(canvas){ if(canvas && canvas._stop) canvas._stop(); }
+
+	// Simple fireworks effect: bursts of radial particles
+	function startFireworks(canvas){
+		const ctx = canvas.getContext('2d');
+		function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+		resize(); window.addEventListener('resize', resize);
+		const bursts = [];
+		let running = true;
+		function spawn(){
+			if(!running) return;
+			const x = 100 + Math.random()*(canvas.width-200);
+			const y = 100 + Math.random()*(canvas.height*0.5);
+			const color = ['#ffdd57','#ff6b6b','#6bc6ff','#8affb0','#d47bff'][Math.floor(Math.random()*5)];
+			const parts = [];
+			for(let i=0;i<30;i++){ parts.push({
+				x, y, r:2+Math.random()*3, angle:Math.random()*Math.PI*2, speed:2+Math.random()*4, life:60+Math.floor(Math.random()*40), c:color
+			}); }
+			bursts.push(parts);
+			setTimeout(spawn, 400 + Math.random()*800);
+		}
+		spawn();
+		function frame(){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			for(let b=bursts.length-1;b>=0;b--){
+				const parts = bursts[b];
+				for(let i=parts.length-1;i>=0;i--){
+					const p = parts[i];
+					p.x += Math.cos(p.angle)*p.speed; p.y += Math.sin(p.angle)*p.speed + 0.5; p.speed *= 0.99; p.life--;
+					ctx.beginPath(); ctx.fillStyle = p.c; ctx.globalAlpha = Math.max(0, p.life/120);
+					ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+					if(p.life<=0) parts.splice(i,1);
+				}
+				if(parts.length===0) bursts.splice(b,1);
+			}
+			if(running) rAF2 = requestAnimationFrame(frame);
+		}
+		let rAF2 = requestAnimationFrame(frame);
+		canvas._stopFire = ()=>{ running=false; cancelAnimationFrame(rAF2); window.removeEventListener('resize', resize); };
+	}
+
+	function stopFireworks(canvas){ if(canvas && canvas._stopFire) canvas._stopFire(); }
 
 	// Simple celebration sound using WebAudio (returns a stop function)
 	function playCelebrationSound(){
@@ -440,10 +502,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			quizForm.style.display = '';
 			// render quiz if not already rendered
 			renderQuiz();
-			// focus first question's first input for accessibility
+			// hide the original start button visually (we'll use nav buttons)
+			try{ startBtn.style.display = 'none'; }catch(e){}
+			// show first question and ensure focus
 			setTimeout(()=>{
-				const firstInput = quizForm.querySelector('input[type="radio"]');
-				if(firstInput) firstInput.focus();
+				if(quizForm._quizState && typeof quizForm._quizState.showQuestion === 'function'){
+					quizForm._quizState.showQuestion(0);
+					const firstInput = quizForm.querySelector('input[type="radio"]');
+					if(firstInput) firstInput.focus();
+				}
 			}, 80);
 		}
 		nameIntro.addEventListener('animationend', after);

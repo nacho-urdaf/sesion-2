@@ -143,6 +143,16 @@
 	100%{transform:translateX(0) translateY(0) scale(1);opacity:1}
 }
 
+/* modal/card slide out to left */
+@keyframes slideOutToLeft{
+    from{transform:translateX(0) scale(1);opacity:1}
+    60%{transform:translateX(-6%) scale(.98);opacity:1}
+    to{transform:translateX(-120%) scale(.96);opacity:0}
+}
+
+.slide-in-right{animation:slideInFromRight 420ms cubic-bezier(.2,.9,.3,1)}
+.slide-out-left{animation:slideOutToLeft 420ms cubic-bezier(.2,.9,.3,1) forwards}
+
 /* Confetti canvas placed behind modal but above overlay */
 .confetti-canvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:99998}
 
@@ -166,3 +176,11 @@
 /* small helper to animate only the button if desired */
 .btn-hide{animation:slideOutLeft 320ms ease forwards}
 @keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-28px) scale(.98)}}
+
+/* question entry micro animation */
+.quiz-question.question-enter{animation:questionEnter 340ms cubic-bezier(.2,.9,.3,1)}
+@keyframes questionEnter{
+	from{opacity:0;transform:translateX(18px) translateY(-6px) scale(.995)}
+	60%{opacity:1;transform:translateX(-6px) translateY(2px) scale(1.01)}
+	to{opacity:1;transform:translateX(0) translateY(0) scale(1)}
+}
